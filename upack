@@ -8,12 +8,38 @@ PROCESSEDPKGS=""
 
 usage() {
     echo "Usage: install|remove [-y | --dry-run] command1 ..."
+    echo "Usage: up|dup # update / system(including kernel) update"
     echo "Usage: --list-pkgs"
     echo "Usage: --list-supported"
 }
 
 empty() {
     return
+}
+
+debian_up() {
+    if [ $1 = up ]; then
+        apt-get update && apt-get upgrade && apt-get autoremove && apt-get clean
+    elif [ $1 = dup ]; then
+        apt-get update && apt-get dist-upgrade && apt-get autoremove && apt-get clean
+    else
+        echo "Unexpected argument"
+        exit 1
+    fi
+
+    exit 0
+}
+
+# $1 - environment
+# $2 - command line argument: up/dup
+up_up() {
+    if [ $1 = debian ]; then
+        debian_up $2
+        exit 0
+    else
+        echo "NYI"
+        exit 1
+    fi
 }
 
 detect_env() {
@@ -62,8 +88,9 @@ else
 fi;
 
 if [ $# = 1 ]; then
-    if [ $1 = "--list-pkgs" ]; then for i in "${!map[@]}"; do echo $i; done; exit 0; fi
-    if [ $1 = "--list-supported" ]; then list_supported; exit 0; fi
+    if [ $1 = --list-pkgs ]; then for i in "${!map[@]}"; do echo $i; done; exit 0; fi
+    if [ $1 = --list-supported ]; then list_supported; exit 0; fi
+    if [ $1 = up ] || [ $1 = sup ]; then up_up $en $1; fi
 fi
 
 if [ $en = debian ]; then
