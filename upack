@@ -1,0 +1,118 @@
+#!/bin/bash
+# Using bash just for associative arrays
+
+DRYRUN=0
+FORCEY=0
+UNPROCPKGS=""
+PROCESSEDPKGS=""
+
+usage() {
+    echo "Usage: install|remove [-y | --dry-run] command1 ..."
+    echo "Usage: --list-pkgs"
+    echo "Usage: --list-supported"
+}
+
+empty() {
+    return
+}
+
+detect_env() {
+    grep -q "[Dd]ebian" /etc/os-release 2> /dev/null
+    if [ $? = 0 ]; then echo debian; fi
+
+    grep -q "[Ff]edora" /etc/os-release 2> /dev/null
+    if [ $? = 0 ]; then echo fedora; fi
+
+    echo ""
+}
+
+list_supported() {
+    echo "Debian, Ubuntu (at least 16.04), Fedora (at least 24)"
+}
+
+en=$(detect_env)
+if [ x$en = x ]; then
+    echo "Unsupported OS/Environment. Patch me and merge request or contact support"
+    exit 1
+fi
+
+declare -A map
+if [ $en = debian ]; then
+    map[sshfs]=sshfs
+    map[qtcreator]=qtcreator
+    map[7z]=p7zip-full
+    map[7za]=p7zip-full
+    #map[7zr]=p7zip # for command with absence packages for all environments will be no support
+    map[g++]=g++
+    map[qmake-qt4]=qt4-make
+    #map[gnat]=gnat # for touples command=package here commented and after should not be listed
+elif [ $en = redhat ] || [ $en = fedora ]; then
+    map[sshfs]=fuse-sshfs
+    map[qtcreator]=qt-creator
+    map[7z]=p7zip-plugins
+    map[7za]=p7zip
+    #map[7zr]=n/a
+    map[g++]=gcc-c++
+    map[qmake-qt4]=qt-devel
+    map[gnat]=gcc-gnat
+    map[wireshark]=wireshark-gtk
+else
+    echo NYI
+    exit 1
+fi;
+
+if [ $# = 1 ]; then
+    if [ $1 = "--list-pkgs" ]; then for i in "${!map[@]}"; do echo $i; done; exit 0; fi
+    if [ $1 = "--list-supported" ]; then list_supported; exit 0; fi
+fi
+
+if [ $en = debian ]; then
+    cmd=apt-get
+elif [ $en = fedora ]; then
+    cmd=dnf
+else
+    echo "NYI: detect exact version to deside dnf or yum or something"
+    exit 1
+fi
+
+if [ $# -ge 1 ]; then
+    if [ $1 != install ] && [ $1 != remove ]; then
+        usage;
+        exit 0;
+    fi
+else
+    usage;
+    exit 0;
+fi
+
+for i in $@; do
+    if [ $i = "-y" ]; then FORCEY=1;
+    elif [ $i = "--dry-run" ]; then DRYRUN=1;
+    elif [ $i = $1 ]; then empty; # just do nothing, needed to skip first argument
+    else
+        UNPROCPKGS="$i $UNPROCPKGS"
+    fi
+done
+
+for i in $UNPROCPKGS; do
+    if ! [ ${map[$i]+_} ]; then
+        # there is no such key in map, using directly
+        # (in hope command=package for all environments)
+        PROCESSEDPKGS="$i $PROCESSEDPKGS"
+    else
+        # substitute command $i using map
+        PROCESSEDPKGS="${map[$i]} $PROCESSEDPKGS"
+    fi
+done
+
+finalCmd="$cmd $1 $PROCESSEDPKGS"
+if [ $FORCEY = 1 ]; then
+    finalCmd="$finalCmd -y"
+fi
+
+if [ $DRYRUN = 1 ]; then
+    echo "$finalCmd"
+    exit 0;
+fi
+
+$finalCmd
