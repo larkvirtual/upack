@@ -106,7 +106,7 @@ if [ $# = 1 ]; then
     if [ $1 = --list-pkgs ]; then for i in "${!map[@]}"; do echo $i; done; exit 0; fi
     if [ $1 = --list-supported ]; then list_supported; exit 0; fi
     if [ $1 = up ]; then up $en $1; fi
-    if [ $1 = sup ]; then dup $en $1; fi
+    if [ $1 = dup ]; then dup $en $1; fi
 fi
 
 if [ $en = debian ]; then
