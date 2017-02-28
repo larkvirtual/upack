@@ -8,7 +8,7 @@ PROCESSEDPKGS=""
 
 usage() {
     echo "Usage: install|remove [-y | --dry-run] command1 ..."
-    echo "Usage: up|dup # update / system(including kernel) update"
+    echo "Usage: up|dup # update / system (including kernel) update"
     echo "Usage: --list-pkgs"
     echo "Usage: --list-supported"
 }
@@ -29,6 +29,10 @@ fedora_dup() {
     dnf update
 }
 
+centos_dup() {
+    yum update
+}
+
 # $1 - environment
 # $2 - command line argument: up/dup
 up() {
@@ -37,6 +41,9 @@ up() {
         exit 0
     elif [ $1 = fedora ]; then
         fedora_dup $2 # this is not typo, fedora_up === fedora_dup
+        exit 0
+    elif [ $1 = centos ]; then
+        centos_dup $2 # this is not typo, centos_up === centos_dup
         exit 0
     else
         echo "NYI"
@@ -51,6 +58,9 @@ dup() {
     elif [ $1 = fedora ]; then
         fedora_dup $2
         exit 0
+    elif [ $1 = centos ]; then
+        centos_dup $2
+        exit 0
     else
         echo "NYI"
         exit 1
@@ -59,16 +69,22 @@ dup() {
 
 detect_env() {
     grep -q "[Dd]ebian" /etc/os-release 2> /dev/null
-    if [ $? = 0 ]; then echo debian; fi
+    if [ $? = 0 ]; then echo debian; return; fi
+
+    grep -q "ID=\"centos\"" /etc/os-release 2> /dev/null
+    if [ $? = 0 ]; then echo centos; return; fi
 
     grep -q "[Ff]edora" /etc/os-release 2> /dev/null
-    if [ $? = 0 ]; then echo fedora; fi
+    if [ $? = 0 ]; then echo fedora; return; fi
 
     echo ""
 }
 
 list_supported() {
-    echo "Debian, Ubuntu (at least 16.04), Fedora (at least 24)"
+    echo "Debian (at least 8)"
+    echo "Ubuntu (at least 16.04)"
+    echo "Fedora (at least 24)"
+    echo "CentOS (at least 7)"
 }
 
 en=$(detect_env)
@@ -87,7 +103,7 @@ if [ $en = debian ]; then
     map[g++]=g++
     map[qmake-qt4]=qt4-make
     #map[gnat]=gnat # for touples command=package here commented and after should not be listed
-elif [ $en = redhat ] || [ $en = fedora ]; then
+elif [ $en = redhat ] || [ $en = fedora ] || [ $en = centos ]; then
     map[sshfs]=fuse-sshfs
     map[qtcreator]=qt-creator
     map[7z]=p7zip-plugins
@@ -113,6 +129,8 @@ if [ $en = debian ]; then
     cmd=apt-get
 elif [ $en = fedora ]; then
     cmd=dnf
+elif [ $en = centos ]; then
+    cmd=yum
 else
     echo "NYI: detect exact version to deside dnf or yum or something"
     exit 1
