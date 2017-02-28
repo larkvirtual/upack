@@ -18,23 +18,38 @@ empty() {
 }
 
 debian_up() {
-    if [ $1 = up ]; then
-        apt-get update && apt-get upgrade && apt-get autoremove && apt-get clean
-    elif [ $1 = dup ]; then
-        apt-get update && apt-get dist-upgrade && apt-get autoremove && apt-get clean
-    else
-        echo "Unexpected argument"
-        exit 1
-    fi
+    apt-get update && apt-get upgrade && apt-get autoremove && apt-get clean
+}
 
-    exit 0
+debian_dup() {
+    apt-get update && apt-get dist-upgrade && apt-get autoremove && apt-get clean
+}
+
+fedora_dup() {
+    dnf update
 }
 
 # $1 - environment
 # $2 - command line argument: up/dup
-up_up() {
+up() {
     if [ $1 = debian ]; then
         debian_up $2
+        exit 0
+    elif [ $1 = fedora ]; then
+        fedora_dup $2 # this is not typo, fedora_up === fedora_dup
+        exit 0
+    else
+        echo "NYI"
+        exit 1
+    fi
+}
+
+dup() {
+    if [ $1 = debian ]; then
+        debian_dup $2
+        exit 0
+    elif [ $1 = fedora ]; then
+        fedora_dup $2
         exit 0
     else
         echo "NYI"
@@ -90,7 +105,8 @@ fi;
 if [ $# = 1 ]; then
     if [ $1 = --list-pkgs ]; then for i in "${!map[@]}"; do echo $i; done; exit 0; fi
     if [ $1 = --list-supported ]; then list_supported; exit 0; fi
-    if [ $1 = up ] || [ $1 = sup ]; then up_up $en $1; fi
+    if [ $1 = up ]; then up $en $1; fi
+    if [ $1 = sup ]; then dup $en $1; fi
 fi
 
 if [ $en = debian ]; then
