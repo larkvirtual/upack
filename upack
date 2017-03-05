@@ -71,6 +71,9 @@ detect_env() {
     grep -q "[Dd]ebian" /etc/os-release 2> /dev/null
     if [ $? = 0 ]; then echo debian; return; fi
 
+    grep -q "os/illumos/dyson/apt" /etc/apt/sources.list 2> /dev/null
+    if [ $? = 0 ]; then echo debian; return; fi
+
     grep -q "ID=\"centos\"" /etc/os-release 2> /dev/null
     if [ $? = 0 ]; then echo centos; return; fi
 
@@ -85,6 +88,7 @@ list_supported() {
     echo "Ubuntu (at least 16.04)"
     echo "Fedora (at least 24)"
     echo "CentOS (at least 7)"
+    echo "Dyson (at least Dufay)"
 }
 
 en=$(detect_env)
