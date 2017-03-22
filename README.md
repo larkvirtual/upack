@@ -7,6 +7,12 @@
   - `cd upack`
   - `sudo make uninstall`
 
+# Update upack
+  - `cd upack`
+  - `sudo make uninstall`
+  - `git pull`
+  - `sudo make install`
+
 # Use upack
   - `sudo upack install sshfs`
   - `sudo upack remove sshfs`
@@ -14,3 +20,4 @@
   - `sudo upack remove -y sshfs`
   - `upack --list-pkgs`
   - `upack --list-supported`
+  - `upack --version`

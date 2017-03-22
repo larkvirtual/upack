@@ -11,6 +11,7 @@ usage() {
     echo "Usage: up|dup # update / system (including kernel) update"
     echo "Usage: --list-pkgs"
     echo "Usage: --list-supported"
+    echo "Usage: --version"
 }
 
 empty() {
@@ -143,6 +144,9 @@ fi;
 if [ $# = 1 ]; then
     if [ $1 = --list-pkgs ]; then for i in "${!map[@]}"; do echo $i; done; exit 0; fi
     if [ $1 = --list-supported ]; then list_supported; exit 0; fi
+    if [ $1 = --version ]; then
+        echo "$0 version $(if [ -f /usr/bin/upack.version ]; then \
+            cat /usr/bin/upack.version; else echo \"unknown\"; fi)"; exit 0; fi
     if [ $1 = up ]; then up $en; fi
     if [ $1 = dup ]; then dup $en; fi
 fi
