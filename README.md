@@ -14,6 +14,7 @@
   - `sudo make install`
 
 # Use upack
+  - `sudo upack dup`
   - `sudo upack install sshfs`
   - `sudo upack remove sshfs`
   - `     upack install --dry-run sshfs`
