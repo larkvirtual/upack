@@ -203,7 +203,6 @@ if [ $FORCEY = 1 ]; then
         finalCmd="$finalCmd -y"
     else
         echo "NOTE: pacman doesn't support -y key (yet), ignoring -y"
-        finalCmd="$finalCmd"
     fi
 fi
 
