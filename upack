@@ -98,15 +98,12 @@ if [ x$en = x ]; then
 fi
 
 declare -A map
+# touples command=package should not be listed
 if [ $en = debian ]; then
-    map[sshfs]=sshfs
-    map[qtcreator]=qtcreator
     map[7z]=p7zip-full
     map[7za]=p7zip-full
     #map[7zr]=p7zip # for command with absence packages for all environments will be no support
-    map[g++]=g++
     map[qmake-qt4]=qt4-make
-    #map[gnat]=gnat # for touples command=package here commented and after should not be listed
 elif [ $en = redhat ] || [ $en = fedora ] || [ $en = centos ]; then
     map[sshfs]=fuse-sshfs
     map[qtcreator]=qt-creator
