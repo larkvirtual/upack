@@ -162,11 +162,11 @@ else
 fi
 
 if [ $en = debian ]; then
-    cmd=apt-get $1
+    cmd="apt-get $1"
 elif [ $en = fedora ]; then
-    cmd=dnf $1
+    cmd="dnf $1"
 elif [ $en = centos ]; then
-    cmd=yum $1
+    cmd="yum $1"
 elif [ $en = pacman ]; then
     if [ $1 = install ]; then
         cmd="pacman -S"
