@@ -49,6 +49,18 @@ pacman_dup() {
     pacman -Syu
 }
 
+freebsd_up() {
+    echo "Updating installed packages..."
+    pkg upgrade && pkg autoremove && pkg clean
+}
+
+freebsd_dup() {
+    freebsd_up
+    echo "Updating base system with kernel..."
+    echo "First install is for userland/kernel, Second is for kernel/userland, Third to make sure install queue is empty"
+    freebsd-update fetch && freebsd-update install && freebsd-update install && freebsd-update install
+}
+
 # $1 - environment name
 up() {
     if [ $1 = debian ]; then
@@ -67,6 +79,8 @@ up() {
         exit 0
     elif [ $1 = altlinux ]; then
         altlinux_up; exit 0
+    elif [ $1 = freebsd ]; then
+        freebsd_up; exit 0
     else
         echo "NYI"; exit 1
     fi
@@ -84,6 +98,7 @@ dup() {
         pacman_dup; exit 0
     elif [ $1 = altlinux ]; then
         altlinux_dup; exit 0
+    elif [ $1 = freebsd ]; then freebsd_dup; exit 0
     else
         echo "NYI"; exit 1
     fi
@@ -108,6 +123,9 @@ detect_env() {
     grep -q "altlinux" /etc/os-release 2> /dev/null
     if [ $? = 0 ]; then echo altlinux; return; fi
 
+    theuname=`uname`
+    if [ "$theuname" = "FreeBSD" ]; then echo freebsd; return; fi
+
     echo ""
 }
 
@@ -119,6 +137,7 @@ list_supported() {
     echo "Dyson (at least Dufay)"
     echo "Manjaro (at least 17.0)"
     echo "AltLinux (at least 8)"
+    echo "FreeBSD (at least 11)"
 }
 
 en=$(detect_env)
@@ -160,6 +179,10 @@ elif [ $en = pacman ]; then
     map[qmake-qt4]=qt4
     map[gnat]=gcc-ada
     map[wireshark]=wireshark-gtk
+elif [ $en = freebsd ]; then
+    map[sshfs]=fuse-sshfs
+    map[7z]=p7zip
+    map[7za]=p7zip
 else
     echo NYI
     exit 1
@@ -200,6 +223,15 @@ elif [ $en = pacman ]; then
         echo "Internal error"
         exit 1
     fi
+elif [ $en = freebsd ]; then
+    if [ $1 = install ]; then
+        cmd="pkg install"
+    elif [ $1 = remove ]; then
+        cmd="pkg delete"
+    else
+        echo "Internal error"
+        exit 1
+    fi
 else
     echo "Internal error: add check for a new environment"
     exit 1
@@ -225,13 +257,15 @@ for i in $UNPROCPKGS; do
     fi
 done
 
-finalCmd="$cmd $PROCESSEDPKGS"
 if [ $FORCEY = 1 ]; then
     if [ $en != pacman ]; then
-        finalCmd="$finalCmd -y"
+        finalCmd="$cmd -y $PROCESSEDPKGS" # FreeBSD's pkg allows -y only after first argument
     else
         echo "NOTE: pacman doesn't support -y key (yet), ignoring -y"
+        finalCmd="$cmd $PROCESSEDPKGS"
     fi
+else
+    finalCmd="$cmd $PROCESSEDPKGS"
 fi
 
 if [ $DRYRUN = 1 ]; then
