@@ -61,6 +61,14 @@ freebsd_dup() {
     freebsd-update fetch && freebsd-update install && freebsd-update install && freebsd-update install
 }
 
+suse_up() {
+    zypper up && zypper ps -s
+}
+
+suse_dup() {
+    zypper dup && zypper ps -s
+}
+
 # $1 - environment name
 up() {
     if [ $1 = debian ]; then
@@ -81,6 +89,8 @@ up() {
         altlinux_up; exit 0
     elif [ $1 = freebsd ]; then
         freebsd_up; exit 0
+    elif [ $1 = suse ]; then
+        suse_up; exit 0
     else
         echo "NYI"; exit 1
     fi
@@ -99,6 +109,7 @@ dup() {
     elif [ $1 = altlinux ]; then
         altlinux_dup; exit 0
     elif [ $1 = freebsd ]; then freebsd_dup; exit 0
+    elif [ $1 = suse ]; then suse_dup; exit 0
     else
         echo "NYI"; exit 1
     fi
@@ -123,6 +134,9 @@ detect_env() {
     grep -q "altlinux" /etc/os-release 2> /dev/null
     if [ $? = 0 ]; then echo altlinux; return; fi
 
+    grep -q "suse" /etc/os-release 2> /dev/null
+    if [ $? = 0 ]; then echo suse; return; fi
+
     theuname=`uname`
     if [ "$theuname" = "FreeBSD" ]; then echo freebsd; return; fi
 
@@ -138,6 +152,7 @@ list_supported() {
     echo "Manjaro (at least 17.0)"
     echo "AltLinux (at least 8)"
     echo "FreeBSD (at least 11)"
+    echo "openSUSE (at least Leap 42.2)"
 }
 
 en=$(detect_env)
@@ -183,6 +198,12 @@ elif [ $en = freebsd ]; then
     map[sshfs]=fuse-sshfs
     map[7z]=p7zip
     map[7za]=p7zip
+elif [ $en = suse ]; then
+    map[7z]=p7zip
+    map[7za]=p7zip
+    map[g++]=gcc-c++
+    map[gnat]=gcc-ada
+    map[qmake-qt4]=libqt4-devel
 else
     echo NYI
     exit 1
@@ -232,6 +253,8 @@ elif [ $en = freebsd ]; then
         echo "Internal error"
         exit 1
     fi
+elif [ $en = suse ]; then
+    cmd="zypper $1"
 else
     echo "Internal error: add check for a new environment"
     exit 1
