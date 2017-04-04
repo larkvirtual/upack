@@ -179,7 +179,7 @@ elif [ $en = redhat ] || [ $en = fedora ] || [ $en = centos ]; then
     map[gnat]=gcc-gnat
     map[wireshark]=wireshark-gtk
 elif [ $en = altlinux ]; then
-    map[sshfs]=fuser-sshfs
+    map[sshfs]=fuse-sshfs
     map[qtcreator]=qt-creator
     map[7z]=p7zip
     map[7za]=p7zip-standalone
