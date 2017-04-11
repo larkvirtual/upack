@@ -26,3 +26,6 @@ rm -f /usr/local/bin/upack /usr/local/bin/upack.version; \
 else rm -f /usr/bin/upack /usr/bin/upack.version; fi
 # if distro is altlinux, then bash4 package should be removed
 # if os is freebsd, then bash package should be removed
+
+update:
+	sudo make uninstall && git pull && sudo make install

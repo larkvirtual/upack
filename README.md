@@ -9,7 +9,7 @@
 
 # Update upack
   - `cd upack`
-  - `sudo make uninstall && git pull && sudo make install`
+  - `make update`
 
 # Use upack
   - `sudo upack dup`
