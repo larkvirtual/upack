@@ -28,6 +28,6 @@
   - `sudo upack install sshfs gnat 7za g++`
   - `sudo upack remove -y sshfs`
   - `upack install --dry-run sshfs`
-  - `upack --list-pkgs` # Supported command list for current OS/Distro
-  - `upack --list-supported`
+  - `upack --list-commands` # Supported command list for current OS/Distro
+  - `upack --list-supported-envs`
   - `upack --version`

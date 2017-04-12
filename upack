@@ -11,8 +11,8 @@ PROCESSEDPKGS=""
 usage() {
     echo "Usage: install|remove [-y | --dry-run] command1 ..."
     echo "Usage: up|dup # update / system (including kernel) update"
-    echo "Usage: --list-pkgs"
-    echo "Usage: --list-supported"
+    echo "Usage: --list-commands"
+    echo "Usage: --list-supported-envs"
     echo "Usage: --version"
 }
 
@@ -210,7 +210,7 @@ else
 fi;
 
 if [ $# = 1 ]; then
-    if [ $1 = --list-pkgs ]; then for i in "${!map[@]}"; do echo $i; done; exit 0; fi
+    if [ $1 = --list-commands ]; then for i in "${!map[@]}"; do echo $i; done; exit 0; fi
     if [ $1 = --list-supported ]; then list_supported; exit 0; fi
     if [ $1 = --version ]; then
         echo "$0 version $(if [ -f /usr/bin/upack.version ]; then \
