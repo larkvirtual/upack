@@ -8,6 +8,7 @@
   - AltLinux
   - FreeBSD
   - openSUSE
+  - Solaris
 
 # Install upack
   - `git clone https://github.com/larkvirtual/upack.git`

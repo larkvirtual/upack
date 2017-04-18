@@ -1,8 +1,12 @@
 install:
 	@cp upack /usr/bin
 	@git branch | grep '*' | awk '{ print $$2 }' > upack.version
-	@awk 1 ORS='' upack.version > /usr/bin/upack.version
-	@echo -n "/" >> /usr/bin/upack.version
+	@echo / >> upack.version;
+	@if [ `uname` = SunOS ]; then \
+gawk 1 ORS='' upack.version > /usr/bin/upack.version; \
+else \
+awk 1 ORS='' upack.version > /usr/bin/upack.version; \
+fi
 	@git log --pretty=format:'%h' -n 1 >> /usr/bin/upack.version
 	@rm -f upack.version
 	-@grep -q "altlinux" /etc/os-release 2> /dev/null; \

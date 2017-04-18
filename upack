@@ -69,6 +69,10 @@ suse_dup() {
     zypper dup && zypper ps -s
 }
 
+solaris_dup() {
+    pkg update
+}
+
 # $1 - environment name
 up() {
     if [ $1 = debian ]; then
@@ -91,6 +95,9 @@ up() {
         freebsd_up; exit 0
     elif [ $1 = suse ]; then
         suse_up; exit 0
+    elif [ $1 = solaris ]; then
+        solaris_dup; # this is not typo, solaris_up === solaris_dup
+        exit 0
     else
         echo "NYI"; exit 1
     fi
@@ -110,6 +117,7 @@ dup() {
         altlinux_dup; exit 0
     elif [ $1 = freebsd ]; then freebsd_dup; exit 0
     elif [ $1 = suse ]; then suse_dup; exit 0
+    elif [ $1 = solaris ]; then solaris_dup; exit 0
     else
         echo "NYI"; exit 1
     fi
@@ -139,6 +147,7 @@ detect_env() {
 
     theuname=`uname`
     if [ "$theuname" = "FreeBSD" ]; then echo freebsd; return; fi
+    if [ "$theuname" = "SunOS" ]; then echo solaris; return; fi
 
     echo ""
 }
@@ -153,6 +162,7 @@ list_supported() {
     echo "AltLinux (at least 8)"
     echo "FreeBSD (at least 11)"
     echo "openSUSE (at least Leap 42.2)"
+    echo "Solaris (at least 11.3)"
 }
 
 en=$(detect_env)
@@ -204,6 +214,10 @@ elif [ $en = suse ]; then
     map[g++]=gcc-c++
     map[gnat]=gcc-ada
     map[qmake-qt4]=libqt4-devel
+elif [ $en = solaris ]; then
+    map[7z]=p7zip
+    map[7za]=p7zip
+    map[g++]=gcc-c++
 else
     echo NYI
     exit 1
@@ -255,6 +269,15 @@ elif [ $en = freebsd ]; then
     fi
 elif [ $en = suse ]; then
     cmd="zypper $1"
+elif [ $en = solaris ]; then
+    if [ $1 = install ]; then
+        cmd="pkg install"
+    elif [ $1 = remove ]; then
+        cmd="pkg uninstall"
+    else
+        echo "Internal error"
+        exit 1
+    fi
 else
     echo "Internal error: add check for a new environment"
     exit 1
