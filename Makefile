@@ -2,7 +2,7 @@ install:
 	@cp upack /usr/bin
 	@git branch | grep '*' | awk '{ print $$2 }' > upack.version
 	@echo / >> upack.version;
-	@if [ `uname` = SunOS ]; then \
+	@if [ `uname` = SunOS ] && [ ! -f /etc/os-release ]; then \
 gawk 1 ORS='' upack.version > /usr/bin/upack.version; \
 else \
 awk 1 ORS='' upack.version > /usr/bin/upack.version; \
