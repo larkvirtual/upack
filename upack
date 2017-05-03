@@ -226,7 +226,7 @@ fi;
 
 if [ $# = 1 ]; then
     if [ $1 = --list-commands ]; then for i in "${!map[@]}"; do echo $i; done; exit 0; fi
-    if [ $1 = --list-supported ]; then list_supported; exit 0; fi
+    if [ $1 = --list-supported-envs ]; then list_supported; exit 0; fi
     if [ $1 = --version ]; then
         echo "$0 version $(if [ -f /usr/bin/upack.version ]; then \
             cat /usr/bin/upack.version; else echo \"unknown\"; fi)"; exit 0; fi
