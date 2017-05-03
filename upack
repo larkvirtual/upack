@@ -34,7 +34,8 @@ altlinux_up() {
 }
 
 altlinux_dup() {
-    apt-get update && apt-get dist-upgrade && update-kernel && apt-get clean
+    apt-get update && apt-get dist-upgrade && update-kernel && \
+    remove-old-kernels && apt-get clean
 }
 
 fedora_dup() {
