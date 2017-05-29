@@ -215,6 +215,7 @@ elif [ $en = suse ]; then
     map[g++]=gcc-c++
     map[gnat]=gcc-ada
     map[qmake-qt4]=libqt4-devel
+    map[qtcreator]=libqt5-creator
 elif [ $en = solaris ]; then
     map[7z]=p7zip
     map[7za]=p7zip
