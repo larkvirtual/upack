@@ -334,6 +334,6 @@ if [ $DRYRUN = 1 ]; then
 fi
 
 $finalCmd
-if [ ! -z $cmd_extra ]; then
+if [ ! -z "$cmd_extra" ]; then
     $cmd_extra
 fi
