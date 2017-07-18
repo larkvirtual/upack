@@ -323,6 +323,7 @@ if [ $FORCEY = 1 ]; then
         echo "NOTE: pacman doesn't support -y key (yet), ignoring -y"
         finalCmd="$cmd $PROCESSEDPKGS"
     fi
+    if [ ! -z $cmd_extra ]; then $cmd_extra="$cmd_extra -y"; fi
 else
     finalCmd="$cmd $PROCESSEDPKGS"
 fi
