@@ -3,14 +3,14 @@
 # bash version must be >= 4, as bash version 3 can't handle 'declare -A map'
 # construction
 
-DRYRUN=0
-FORCEY=0
-UNPROCPKGS=""
-PROCESSEDPKGS=""
+DRYRUN=0            # boolean variable
+FORCEY=""           #  string variable
+UNPROCPKGS=""       #  string variable
+PROCESSEDPKGS=""    #  string variable
 
 usage() {
     echo "Usage: install|remove [-y | --dry-run] command1 ..."
-    echo "Usage: up|dup # update / system (including kernel) update"
+    echo "Usage: up|dup [-y] # update / full system (including kernel) update"
     echo "Usage: --list-commands"
     echo "Usage: --list-supported-envs"
     echo "Usage: --version"
@@ -21,12 +21,13 @@ empty() {
 }
 
 debian_up() {
-    apt-get update && apt-get upgrade && apt-get autoremove && apt-get clean
+    apt-get update && apt-get upgrade $FORCEY && \
+    apt-get autoremove $FORCEY && apt-get clean
 }
 
 debian_dup() {
-    apt-get update && apt-get dist-upgrade && apt-get autoremove && \
-    apt-get clean
+    apt-get update && apt-get dist-upgrade $FORCEY && \
+    apt-get autoremove $FORCEY && apt-get clean
 }
 
 altlinux_up() {
@@ -77,51 +78,38 @@ solaris_dup() {
 # $1 - environment name
 up() {
     if [ $1 = debian ]; then
-        debian_up; exit 0
+        debian_up
     elif [ $1 = fedora ]; then
         fedora_dup # this is not typo, fedora_up === fedora_dup
         # as there is only way to do fedora_dup only?
-        exit 0
     elif [ $1 = centos ]; then
         centos_dup # this is not typo, centos_up === centos_dup
         # -""-
-        exit 0
     elif [ $1 = pacman ]; then
         pacman_dup # this is not typo, pacman_up === pacman_dup
         # -""-
-        exit 0
     elif [ $1 = altlinux ]; then
-        altlinux_up; exit 0
+        altlinux_up
     elif [ $1 = freebsd ]; then
-        freebsd_up; exit 0
+        freebsd_up
     elif [ $1 = suse ]; then
-        suse_up; exit 0
+        suse_up
     elif [ $1 = solaris ]; then
         solaris_dup; # this is not typo, solaris_up === solaris_dup
-        exit 0
-    else
-        echo "NYI"; exit 1
-    fi
+    else echo "NYI"; exit 1; fi
 }
 
 # $1 - environment name
 dup() {
-    if [ $1 = debian ]; then
-        debian_dup; exit 0
-    elif [ $1 = fedora ]; then
-        fedora_dup; exit 0
-    elif [ $1 = centos ]; then
-        centos_dup; exit 0
-    elif [ $1 = pacman ]; then
-        pacman_dup; exit 0
-    elif [ $1 = altlinux ]; then
-        altlinux_dup; exit 0
-    elif [ $1 = freebsd ]; then freebsd_dup; exit 0
-    elif [ $1 = suse ]; then suse_dup; exit 0
-    elif [ $1 = solaris ]; then solaris_dup; exit 0
-    else
-        echo "NYI"; exit 1
-    fi
+    if [ $1 = debian ]; then debian_dup
+    elif [ $1 = fedora ]; then fedora_dup
+    elif [ $1 = centos ]; then centos_dup
+    elif [ $1 = pacman ]; then pacman_dup
+    elif [ $1 = altlinux ]; then altlinux_dup
+    elif [ $1 = freebsd ]; then freebsd_dup
+    elif [ $1 = suse ]; then suse_dup
+    elif [ $1 = solaris ]; then solaris_dup
+    else echo "NYI"; exit 1; fi
 }
 
 detect_env() {
@@ -231,12 +219,21 @@ if [ $# = 1 ]; then
     if [ $1 = --version ]; then
         echo "$0 version $(if [ -f /usr/bin/upack.version ]; then \
             cat /usr/bin/upack.version; else echo \"unknown\"; fi)"; exit 0; fi
-    if [ $1 = up ]; then up $en; fi
-    if [ $1 = dup ]; then dup $en; fi
+    if [ $1 = up ]; then up $en; exit 0; fi
+    if [ $1 = dup ]; then dup $en; exit 0; fi
+elif [ $# = 2 ] && [ $1 = up ] && [ $2 = "-y" ]; then
+    FORCEY=$2
+    up $en
+    exit 0
+elif [ $# = 2 ] && [ $1 = dup ] && [ $2 = "-y" ]; then
+    FORCEY=$2
+    dup $en
+    exit 0
 fi
 
 if [ $# -ge 1 ]; then
-    if [ $1 != install ] && [ $1 != remove ]; then
+    if [ $1 != install ] && [ $1 != remove ] && \
+       [ $1 != up ] && [ $1 != dup ]; then
         usage;
         exit 0;
     fi
@@ -297,7 +294,7 @@ else
 fi
 
 for i in $@; do
-    if [ $i = "-y" ]; then FORCEY=1;
+    if [ $i = "-y" ]; then FORCEY=$i;
     elif [ $i = "--dry-run" ]; then DRYRUN=1;
     elif [ $i = $1 ]; then empty; # just do nothing, needed to skip first argument
     else
@@ -316,7 +313,7 @@ for i in $UNPROCPKGS; do
     fi
 done
 
-if [ $FORCEY = 1 ]; then
+if [ x$FORCEY != x ]; then
     if [ $en != pacman ]; then
         finalCmd="$cmd -y $PROCESSEDPKGS" # FreeBSD's pkg allows -y only after first argument
     else
