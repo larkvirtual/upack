@@ -64,11 +64,11 @@ freebsd_dup() {
 }
 
 suse_up() {
-    zypper up -y && zypper ps -s
+    zypper up $FORCEY && zypper ps -s
 }
 
 suse_dup() {
-    zypper dup -y && zypper ps -s
+    zypper dup $FORCEY && zypper ps -s
 }
 
 solaris_dup() {
