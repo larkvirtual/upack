@@ -318,7 +318,9 @@ done
 
 if [ $FORCEY = 1 ]; then
     if [ $en != pacman ]; then
-        finalCmd="$cmd -y $PROCESSEDPKGS" # FreeBSD's pkg allows -y only after first argument
+        # FreeBSD's pkg, openSUSE zypper allows -y only after first argument
+        # others tools does, but let's put -y first anyways
+        finalCmd="$cmd -y $PROCESSEDPKGS"
     else
         echo "NOTE: pacman doesn't support -y key (yet), ignoring -y"
         finalCmd="$cmd $PROCESSEDPKGS"
