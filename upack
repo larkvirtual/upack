@@ -10,7 +10,8 @@ PROCESSEDPKGS=""    #  string variable
 
 usage() {
     echo "Usage: install|remove [-y | --dry-run] command1 ..."
-    echo "Usage: up|dup [-y] # update / full system (including kernel) update"
+    echo "Usage: up|dup      # update / full system (including kernel) update"
+    echo "Usage: up|dup [-y] # only for Debian and openSUSE"
     echo "Usage: --list-commands"
     echo "Usage: --list-supported-envs"
     echo "Usage: --version"
