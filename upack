@@ -11,7 +11,7 @@ PROCESSEDPKGS=""    #  string variable
 usage() {
     echo "Usage: install|remove [-y | --dry-run] command1 ..."
     echo "Usage: up|dup      # update / full system (including kernel) update"
-    echo "Usage: up|dup [-y] # only for Debian and openSUSE"
+    echo "Usage: up|dup [-y] # for Debian, openSUSE, RHEL/CentOS/Fedora"
     echo "Usage: --list-commands"
     echo "Usage: --list-supported-envs"
     echo "Usage: --version"
@@ -41,11 +41,11 @@ altlinux_dup() {
 }
 
 fedora_dup() {
-    dnf update
+    dnf update $FORCEY
 }
 
 centos_dup() {
-    yum update
+    yum update $FORCEY
 }
 
 pacman_dup() {
