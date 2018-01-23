@@ -244,11 +244,13 @@ else
 fi
 
 cmd_extra=""
-if [ $en = debian ] || [ $en = altlinux ]; then
+if [ $en = debian ]; then
     cmd="apt-get $1"
     if [ $1 = remove ]; then
         cmd_extra="apt-get autoremove"
     fi
+elif [ $en = altlinux ]; then
+    cmd="apt-get $1"
 elif [ $en = fedora ]; then
     cmd="dnf $1"
     if [ $1 = remove ]; then
