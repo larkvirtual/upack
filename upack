@@ -143,16 +143,16 @@ detect_env() {
 }
 
 list_supported() {
-    echo "Debian (at least 8)"
-    echo "Ubuntu (at least 16.04)"
-    echo "Fedora (at least 24)"
-    echo "CentOS (at least 7)"
+    echo "Debian GNU/Linux 8+"
+    echo "Ubuntu 12.04+"
+    echo "Fedora 24+"
+    echo "CentOS 7+"
     echo "Dyson (at least Dufay)"
-    echo "Manjaro (at least 17.0)"
-    echo "AltLinux (at least 8)"
-    echo "FreeBSD (at least 11)"
-    echo "openSUSE (at least Leap 42.2)"
-    echo "Solaris (at least 11.3)"
+    echo "Manjaro 17.0+"
+    echo "ALT Linux 8+"
+    echo "FreeBSD 11+"
+    echo "openSUSE 42.2+ and Tumbleweed"
+    echo "Solaris 11.3+"
 }
 
 en=$(detect_env)
