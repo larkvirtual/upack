@@ -10,6 +10,10 @@
   - openSUSE
   - Solaris
 
+# Dependencies
+  - make (during install, update, uninstall time only)
+  - git (during install time only)
+
 # Install upack
   - `git clone https://github.com/larkvirtual/upack.git`
   - `cd upack`
