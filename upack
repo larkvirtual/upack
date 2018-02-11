@@ -114,25 +114,22 @@ dup() {
 }
 
 detect_env() {
-    grep -q "[Dd]ebian" /etc/os-release 2> /dev/null
+    egrep -q "[Dd]ebian|os/illumos/dyson/apt" /etc/os-release
     if [ $? = 0 ]; then echo debian; return; fi
 
-    grep -q "os/illumos/dyson/apt" /etc/apt/sources.list 2> /dev/null
-    if [ $? = 0 ]; then echo debian; return; fi
-
-    grep -q "ID=\"centos\"" /etc/os-release 2> /dev/null
+    grep -q "ID=\"centos\"" /etc/os-release
     if [ $? = 0 ]; then echo centos; return; fi
 
-    grep -q "[Ff]edora" /etc/os-release 2> /dev/null
+    grep -q "[Ff]edora" /etc/os-release
     if [ $? = 0 ]; then echo fedora; return; fi
 
-    grep -q "manjaro" /etc/os-release 2> /dev/null
+    grep -q "manjaro" /etc/os-release
     if [ $? = 0 ]; then echo pacman; return; fi
 
-    grep -q "altlinux" /etc/os-release 2> /dev/null
+    grep -q "altlinux" /etc/os-release
     if [ $? = 0 ]; then echo altlinux; return; fi
 
-    grep -q "suse" /etc/os-release 2> /dev/null
+    grep -q "suse" /etc/os-release
     if [ $? = 0 ]; then echo suse; return; fi
 
     theuname=`uname`
