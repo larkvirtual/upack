@@ -41,11 +41,11 @@ altlinux_dup() {
 }
 
 fedora_dup() {
-    dnf update $FORCEY
+    dnf update $FORCEY && dnf autoremove $FORCEY
 }
 
 centos_dup() {
-    yum update $FORCEY
+    yum update $FORCEY && yum autoremove $FORCEY
 }
 
 pacman_dup() {
