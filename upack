@@ -245,6 +245,8 @@ if [ $en = debian ]; then
     cmd="apt-get $1"
     if [ $1 = remove ]; then
         cmd_extra="apt-get autoremove"
+    elif [ $1 = install ]; then
+        cmd_extra="apt-get clean"
     fi
 elif [ $en = altlinux ]; then
     cmd="apt-get $1"
