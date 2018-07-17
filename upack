@@ -204,6 +204,7 @@ elif [ $en = suse ]; then
     map[qtcreator]=libqt5-creator
     map[btrfs-progs]=btrfsprogs
     map[lm-sensors]=sensors
+    map[libssl-dev]=openssl-devel
 elif [ $en = solaris ]; then
     map[7z]=p7zip
     map[7za]=p7zip
