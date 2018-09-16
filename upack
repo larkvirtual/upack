@@ -191,6 +191,7 @@ elif [ $en = pacman ]; then
     map[qmake-qt4]=qt4
     map[gnat]=gcc-ada
     map[wireshark]=wireshark-gtk
+    map[openssh-server]=openssh
 elif [ $en = freebsd ]; then
     map[sshfs]=fuse-sshfs
     map[7z]=p7zip
