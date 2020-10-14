@@ -5,7 +5,7 @@
   - CentOS
   - Dyson
   - Manjaro
-  - ALT Linux
+  - ALT Linux 8
   - FreeBSD
   - openSUSE
   - Solaris
