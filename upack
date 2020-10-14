@@ -31,11 +31,20 @@ debian_dup() {
     apt-get autoremove $FORCEY && apt-get clean
 }
 
-altlinux_up() {
+altlinux8_up() {
     apt-get update && apt-get upgrade && apt-get clean
 }
 
-altlinux_dup() {
+altlinux8_dup() {
+    apt-get update && apt-get dist-upgrade && update-kernel && \
+    remove-old-kernels && apt-get clean
+}
+
+altlinux9_up() {
+    apt-get update && apt-get dist-upgrade && apt-get clean
+}
+
+altlinux9_dup() {
     apt-get update && apt-get dist-upgrade && update-kernel && \
     remove-old-kernels && apt-get clean
 }
@@ -89,8 +98,10 @@ up() {
     elif [ $1 = pacman ]; then
         pacman_dup # this is not typo, pacman_up === pacman_dup
         # -""-
-    elif [ $1 = altlinux ]; then
-        altlinux_up
+    elif [ $1 = altlinux8 ]; then
+        altlinux8_up
+    elif [ $1 = altlinux9 ]; then
+        altlinux9_up
     elif [ $1 = freebsd ]; then
         freebsd_up
     elif [ $1 = suse ]; then
@@ -106,7 +117,8 @@ dup() {
     elif [ $1 = fedora ]; then fedora_dup
     elif [ $1 = centos ]; then centos_dup
     elif [ $1 = pacman ]; then pacman_dup
-    elif [ $1 = altlinux ]; then altlinux_dup
+    elif [ $1 = altlinux8 ]; then altlinux8_dup
+    elif [ $1 = altlinux9 ]; then altlinux9_dup
     elif [ $1 = freebsd ]; then freebsd_dup
     elif [ $1 = suse ]; then suse_dup
     elif [ $1 = solaris ]; then solaris_dup
@@ -126,8 +138,15 @@ detect_env() {
     grep -q "manjaro" /etc/os-release
     if [ $? = 0 ]; then echo pacman; return; fi
 
-    grep -q "altlinux" /etc/os-release
-    if [ $? = 0 ]; then echo altlinux; return; fi
+    grep -q ID=altlinux /etc/os-release
+    if [ $? = 0 ]; then
+        nicerId="$(grep VERSION_ID /etc/os-release | sed 's/=/ /g' | awk '{print $2}')"
+        if [[ $nicerId == *8* ]]; then
+            echo altlinux8; return
+        elif [[ $nicerId = *9* ]]; then
+            echo altlinux9; return
+        fi
+    fi
 
     grep -q "suse" /etc/os-release
     if [ $? = 0 ]; then echo suse; return; fi
@@ -176,7 +195,7 @@ elif [ $en = redhat ] || [ $en = fedora ] || [ $en = centos ]; then
     map[gnat]=gcc-gnat
     map[lm-sensors]=lm_sensors
     map[wireshark]=wireshark-gtk
-elif [ $en = altlinux ]; then
+elif [ $en = altlinux8 ]; then
     map[sshfs]=fuse-sshfs
     map[qtcreator]=qt-creator
     map[7z]=p7zip
@@ -185,6 +204,14 @@ elif [ $en = altlinux ]; then
     map[qmake-qt4]=qt-devel
     map[gnat]=gcc5-gnat
     map[wireshark]=wireshark-gtk+
+elif [ $en = altlinux9 ]; then
+    map[sshfs]=fuse-sshfs
+    map[qtcreator]=qt-creator
+    map[7z]=p7zip
+    map[7za]=p7zip-standalone
+    map[g++]=gcc8-c++
+    map[gnat]=gcc8-gnat
+    map[wireshark]=wireshark-qt5
 elif [ $en = pacman ]; then
     map[7z]=p7zip
     map[7za]=p7zip
@@ -253,7 +280,7 @@ if [ $en = debian ]; then
     elif [ $1 = install ]; then
         cmd_extra="apt-get clean"
     fi
-elif [ $en = altlinux ]; then
+elif [ $en = altlinux8 ] || [ $en = altlinux9 ]; then
     cmd="apt-get $1"
 elif [ $en = fedora ]; then
     cmd="dnf $1"

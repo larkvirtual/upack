@@ -11,7 +11,7 @@ fi
 	@rm -f upack.version
 	-@grep -q "altlinux" /etc/os-release 2> /dev/null; \
 if [ $$? = 0 ]; then \
-echo "Installing required package bash4, as existing /bin/bash is version 3"; \
+echo "Installing required package bash4 (as ALT Linux 8 /bin/bash is version 3)"; \
 apt-get install bash4 -y && \
 sed -i 's/\#\!\/bin\/bash/\#\!\/bin\/bash4/' /usr/bin/upack; \
 fi
