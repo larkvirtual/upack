@@ -312,7 +312,7 @@ elif [ $en = redhat ]; then
     cmd="yum $1"
     if [ $1 = remove ]; then
         cmd_extra="yum autoremove"
-    elif [ $1 = install ] then;
+    elif [ $1 = install ]; then
         # External repository adding depending on environment version special case
         for i in `seq 2 $#`; do
             if [ "$i" = ansible ]; then
