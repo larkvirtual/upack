@@ -315,7 +315,7 @@ elif [ $en = redhat ]; then
     elif [ $1 = install ]; then
         # External repository adding depending on environment version special case
         for i in `seq 2 $#`; do
-            if [ "$i" = ansible ]; then
+            if [ "${!i}" = ansible ]; then
                 if [ "$en_ver" = 7 ]; then
                     sudo subscription-manager repos --enable rhel-7-server-ansible-2.9-rpms
                 elif [ "$en_ver" = 8 ]; then
