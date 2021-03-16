@@ -312,15 +312,20 @@ elif [ $en = redhat ]; then
     cmd="yum $1"
     if [ $1 = remove ]; then
         cmd_extra="yum autoremove"
-    elif [ $1 = install ] && [ $2 = ansible ]; then # External repository adding special case
-        if [ "$en_ver" = 7 ]; then
-            sudo subscription-manager repos --enable rhel-7-server-ansible-2.9-rpms
-        elif [ "$en_ver" = 8 ]; then
-            sudo subscription-manager repos --enable ansible-2.9-for-rhel-8-x86_64-rpms
-        else
-            echo "Unexpected environment version. Please update 'upack' version!"
-            exit 1
-        fi
+    elif [ $1 = install ] then;
+        # External repository adding depending on environment version special case
+        for i in `seq 2 $#`; do
+            if [ "$i" = ansible ];
+                if [ "$en_ver" = 7 ]; then
+                    sudo subscription-manager repos --enable rhel-7-server-ansible-2.9-rpms
+                elif [ "$en_ver" = 8 ]; then
+                    sudo subscription-manager repos --enable ansible-2.9-for-rhel-8-x86_64-rpms
+                else
+                    echo "Unexpected environment version. Please update 'upack' version!"
+                    exit 1
+                fi
+            fi
+        done
     fi
 elif [ $en = pacman ]; then
     if [ $1 = install ]; then
