@@ -133,15 +133,13 @@ detect_env() {
     if [ $? = 0 ]; then
         grep -q "VERSION_ID=\"8" /etc/os-release
         if [ $? = 0 ]; then
-            en_ver=8
+            echo redhat8; return
         fi
 
         grep -q "VERSION_ID=\"7" /etc/os-release
         if [ $? = 0 ]; then
-            en_ver=7
+            echo redhat7; return
         fi
-
-        echo redhat; return
     fi
 
     grep -q "ID=\"centos\"" /etc/os-release
@@ -200,7 +198,7 @@ if [ $en = debian ]; then
     map[7za]=p7zip-full
     #map[7zr]=p7zip # for command with absence packages for all environments will be no support
     map[qmake-qt4]=qt4-make
-elif [ $en = redhat ] || [ $en = fedora ] || [ $en = centos ]; then
+elif [ $en = redhat7 ] || [ $en = redhat8 ] || [ $en = fedora ] || [ $en = centos ]; then
     map[sshfs]=fuse-sshfs
     map[qtcreator]=qt-creator
     map[7z]=p7zip-plugins
@@ -308,7 +306,7 @@ elif [ $en = centos ]; then
     if [ $1 = remove ]; then
         cmd_extra="yum autoremove"
     fi
-elif [ $en = redhat ]; then
+elif [ $en = redhat7 ] || [ $en = redhat8 ]; then
     cmd="yum $1"
     if [ $1 = remove ]; then
         cmd_extra="yum autoremove"
@@ -316,9 +314,9 @@ elif [ $en = redhat ]; then
         # External repository adding depending on environment version special case
         for i in `seq 2 $#`; do
             if [ "${!i}" = ansible ]; then
-                if [ "$en_ver" = 7 ]; then
+                if [ $en = redhat7 ]; then
                     sudo subscription-manager repos --enable rhel-7-server-ansible-2.9-rpms
-                elif [ "$en_ver" = 8 ]; then
+                elif [ $en = redhat8 ]; then
                     sudo subscription-manager repos --enable ansible-2.9-for-rhel-8-x86_64-rpms
                 else
                     echo "Unexpected environment version. Please update 'upack' version!"
