@@ -129,6 +129,21 @@ detect_env() {
     egrep -q "[Dd]ebian|os/illumos/dyson/apt" /etc/os-release
     if [ $? = 0 ]; then echo debian; return; fi
 
+    grep -q "ID=\"rhel\"" /etc/os-release
+    if [ $? = 0 ]; then
+        grep -q "VERSION_ID=\"8" /etc/os-release
+        if [ $? = 0 ]; then
+            en_ver=8
+        fi
+
+        grep -q "VERSION_ID=\"7" /etc/os-release
+        if [ $? = 0 ]; then
+            en_ver=7
+        fi
+
+        echo redhat; return
+    fi
+
     grep -q "ID=\"centos\"" /etc/os-release
     if [ $? = 0 ]; then echo centos; return; fi
 
@@ -162,6 +177,7 @@ list_supported() {
     echo "Debian GNU/Linux 8+"
     echo "Ubuntu 12.04+"
     echo "Fedora 24+"
+    echo "RHEL 7, 8"
     echo "CentOS 7+"
     echo "Dyson (at least Dufay)"
     echo "Manjaro 17.0+"
@@ -291,6 +307,20 @@ elif [ $en = centos ]; then
     cmd="yum $1"
     if [ $1 = remove ]; then
         cmd_extra="yum autoremove"
+    fi
+elif [ $en = redhat ]; then
+    cmd="yum $1"
+    if [ $1 = remove ]; then
+        cmd_extra="yum autoremove"
+    elif [ $1 = install ] && [ $2 = ansible ]; then # External repository adding special case
+        if [ "$en_ver" = 7 ]; then
+            sudo subscription-manager repos --enable rhel-7-server-ansible-2.9-rpms
+        elif [ "$en_ver" = 8 ]; then
+            sudo subscription-manager repos --enable ansible-2.9-for-rhel-8-x86_64-rpms
+        else
+            echo "Unexpected environment version. Please update 'upack' version!"
+            exit 1
+        fi
     fi
 elif [ $en = pacman ]; then
     if [ $1 = install ]; then
