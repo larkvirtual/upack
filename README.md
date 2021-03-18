@@ -2,10 +2,11 @@
   - Debian GNU/Linux
   - Ubuntu
   - Fedora
+  - RHEL
   - CentOS
   - Dyson
   - Manjaro
-  - ALT Linux 8, 9
+  - ALT Linux
   - FreeBSD
   - openSUSE
   - Solaris
