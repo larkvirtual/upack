@@ -11,7 +11,7 @@ PROCESSEDPKGS=""    #  string variable
 usage() {
     echo "Usage: install|remove [-y | --dry-run] command1 ..."
     echo "Usage: up|dup      # update / full system (including kernel) update"
-    echo "Usage: up|dup [-y] # for Debian, openSUSE, RHEL/CentOS/Fedora"
+    echo "Usage: up|dup [-y] # for Debian/Ubuntu, openSUSE, RHEL/CentOS/Fedora"
     echo "Usage: --list-commands"
     echo "Usage: --list-supported-envs"
     echo "Usage: --version"
@@ -126,7 +126,7 @@ dup() {
 }
 
 detect_env() {
-    egrep -q "[Dd]ebian|os/illumos/dyson/apt" /etc/os-release
+    egrep -q "[Dd]ebian|os/illumos/dyson/apt|ubuntu" /etc/os-release
     if [ $? = 0 ]; then echo debian; return; fi
 
     grep -q "ID=\"rhel\"" /etc/os-release
@@ -174,6 +174,7 @@ detect_env() {
 list_supported() {
     echo "Debian GNU/Linux 8+"
     echo "Ubuntu 12.04+"
+    echo "Mint"
     echo "Fedora 24+"
     echo "RHEL 7, 8"
     echo "CentOS 7+"

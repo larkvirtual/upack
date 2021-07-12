@@ -1,6 +1,7 @@
 # Supported OS/Distros
   - Debian GNU/Linux
   - Ubuntu
+  - Mint
   - Fedora
   - RHEL
   - CentOS
