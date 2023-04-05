@@ -195,11 +195,13 @@ fi
 declare -A map
 # touples command=package should not be listed
 if [ $en = debian ]; then
+    map[jigdo-lite]=jigdo-file
     map[7z]=p7zip-full
     map[7za]=p7zip-full
     #map[7zr]=p7zip # for command with absence packages for all environments will be no support
     map[qmake-qt4]=qt4-make
 elif [ $en = redhat7 ] || [ $en = redhat8 ] || [ $en = fedora ] || [ $en = centos ]; then
+    map[jigdo-lite]=jigdo
     map[sshfs]=fuse-sshfs
     map[qtcreator]=qt-creator
     map[7z]=p7zip-plugins
