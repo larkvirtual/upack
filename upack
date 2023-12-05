@@ -126,7 +126,7 @@ dup() {
 }
 
 detect_env() {
-    egrep -q "[Dd]ebian|os/illumos/dyson/apt|ubuntu" /etc/os-release
+    grep -qE "[Dd]ebian|os/illumos/dyson/apt|ubuntu" /etc/os-release
     if [ $? = 0 ]; then echo debian; return; fi
 
     grep -q "ID=\"rhel\"" /etc/os-release
