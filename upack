@@ -49,6 +49,15 @@ altlinux9_dup() {
     /usr/sbin/remove-old-kernels && apt-get clean
 }
 
+altlinux10_up() {
+    apt-get update && apt-get dist-upgrade && apt-get clean
+}
+
+altlinux10_dup() {
+    apt-get update && apt-get dist-upgrade && /usr/sbin/update-kernel && \
+    /usr/sbin/remove-old-kernels && apt-get clean
+}
+
 fedora_dup() {
     dnf update $FORCEY && dnf autoremove $FORCEY
 }
@@ -102,6 +111,8 @@ up() {
         altlinux8_up
     elif [ $1 = altlinux9 ]; then
         altlinux9_up
+    elif [ $1 = altlinux10 ]; then
+        altlinux10_up
     elif [ $1 = freebsd ]; then
         freebsd_up
     elif [ $1 = suse ]; then
@@ -119,6 +130,7 @@ dup() {
     elif [ $1 = pacman ]; then pacman_dup
     elif [ $1 = altlinux8 ]; then altlinux8_dup
     elif [ $1 = altlinux9 ]; then altlinux9_dup
+    elif [ $1 = altlinux10 ]; then altlinux10_dup
     elif [ $1 = freebsd ]; then freebsd_dup
     elif [ $1 = suse ]; then suse_dup
     elif [ $1 = solaris ]; then solaris_dup
@@ -158,6 +170,8 @@ detect_env() {
             echo altlinux8; return
         elif [[ $nicerId = *9* ]]; then
             echo altlinux9; return
+        elif [[ $nicerId = *10* ]]; then
+            echo altlinux10; return
         fi
     fi
 
@@ -180,7 +194,7 @@ list_supported() {
     echo "CentOS 7+"
     echo "Dyson (at least Dufay)"
     echo "Manjaro 17.0+"
-    echo "ALT Linux 8+"
+    echo "ALT Linux 8, 9, 10"
     echo "FreeBSD 11+"
     echo "openSUSE 42.2+ and Tumbleweed"
     echo "Solaris 11.3+"
@@ -228,6 +242,14 @@ elif [ $en = altlinux9 ]; then
     map[7za]=p7zip-standalone
     map[g++]=gcc8-c++
     map[gnat]=gcc8-gnat
+    map[wireshark]=wireshark-qt5
+elif [ $en = altlinux10 ]; then
+    map[sshfs]=fuse-sshfs
+    map[qtcreator]=qt-creator
+    map[7z]=p7zip
+    map[7za]=p7zip-standalone
+    map[g++]=gcc10-c++
+    map[gnat]=gcc10-gnat
     map[wireshark]=wireshark-qt5
 elif [ $en = pacman ]; then
     map[7z]=p7zip
@@ -297,7 +319,7 @@ if [ $en = debian ]; then
     elif [ $1 = install ]; then
         cmd_extra="apt-get clean"
     fi
-elif [ $en = altlinux8 ] || [ $en = altlinux9 ]; then
+elif [ $en = altlinux8 ] || [ $en = altlinux9 ] || [ $en = altlinux10 ]; then
     cmd="apt-get $1"
 elif [ $en = fedora ]; then
     cmd="dnf $1"
