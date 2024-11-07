@@ -9,7 +9,7 @@ UNPROCPKGS=""       #  string variable
 PROCESSEDPKGS=""    #  string variable
 
 usage() {
-    echo "Usage: install|remove [-y | --dry-run] command1 ..."
+    echo "Usage: install|in|remove [-y | --dry-run] command1 ..."
     echo "Usage: up|dup      # update / full system (including kernel) update"
     echo "Usage: up|dup [-y] # for Debian/Ubuntu, openSUSE, RHEL/CentOS/Fedora"
     echo "Usage: --list-commands"
@@ -301,7 +301,7 @@ elif [ $# = 2 ] && [ $1 = dup ] && [ $2 = "-y" ]; then
 fi
 
 if [ $# -ge 1 ]; then
-    if [ $1 != install ] && [ $1 != remove ] && \
+    if [ $1 != install ] && [ $1 != in ] && [ $1 != remove ] && \
        [ $1 != up ] && [ $1 != dup ]; then
         usage;
         exit 0;
@@ -316,7 +316,7 @@ if [ $en = debian ]; then
     cmd="apt-get $1"
     if [ $1 = remove ]; then
         cmd_extra="apt-get autoremove"
-    elif [ $1 = install ]; then
+    elif [ $1 = install ] || [ $1 = in ]; then
         cmd_extra="apt-get clean"
     fi
 elif [ $en = altlinux8 ] || [ $en = altlinux9 ] || [ $en = altlinux10 ]; then
@@ -335,7 +335,7 @@ elif [ $en = redhat7 ] || [ $en = redhat8 ]; then
     cmd="yum $1"
     if [ $1 = remove ]; then
         cmd_extra="yum autoremove"
-    elif [ $1 = install ]; then
+    elif [ $1 = install ] || [ $1 = in ]; then
         # External repository adding depending on environment version special case
         for i in `seq 2 $#`; do
             if [ "${!i}" = ansible ]; then
@@ -351,7 +351,7 @@ elif [ $en = redhat7 ] || [ $en = redhat8 ]; then
         done
     fi
 elif [ $en = pacman ]; then
-    if [ $1 = install ]; then
+    if [ $1 = install ] || [ $1 = in ]; then
         cmd="pacman -S"
     elif [ $1 = remove ]; then
         cmd="pacman -Rs"
@@ -360,7 +360,7 @@ elif [ $en = pacman ]; then
         exit 1
     fi
 elif [ $en = freebsd ]; then
-    if [ $1 = install ]; then
+    if [ $1 = install ] || [ $1 = in ]; then
         cmd="pkg install"
     elif [ $1 = remove ]; then
         cmd="pkg delete"
@@ -370,8 +370,8 @@ elif [ $en = freebsd ]; then
         exit 1
     fi
 elif [ $en = suse ]; then
-    if [ $1 = install ]; then
-        cmd="zypper $1"
+    if [ $1 = install ] || [ $1 = in ]; then
+        cmd="zypper install"
     elif [ $1 = remove ]; then
         cmd="zypper $1 -u"
     else
@@ -379,7 +379,7 @@ elif [ $en = suse ]; then
         exit 1
     fi
 elif [ $en = solaris ]; then
-    if [ $1 = install ]; then
+    if [ $1 = install ] || [ $1 = in ]; then
         cmd="pkg install"
     elif [ $1 = remove ]; then
         cmd="pkg uninstall"
