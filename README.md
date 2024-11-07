@@ -33,6 +33,7 @@
   - `sudo upack dup` # System-wide update (userland, kernel)
   - `sudo upack up` # Non-system-wide update (userland only)
   - `sudo upack install sshfs gnat 7za g++`
+  - `sudo upack in -y sshfs gnat 7za g++ (installs without confirmation)`
   - `sudo upack remove -y sshfs # Removes sshfs (and unneeded dependencies if supported)`
   - `upack install --dry-run sshfs`
   - `upack --list-commands` # Supported command list for current OS/Distro
