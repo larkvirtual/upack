@@ -313,10 +313,11 @@ fi
 
 cmd_extra=""
 if [ $en = debian ]; then
-    cmd="apt-get $1"
     if [ $1 = remove ]; then
+        cmd="apt-get $1"
         cmd_extra="apt-get autoremove"
     elif [ $1 = install ] || [ $1 = in ]; then
+        cmd="apt-get install"
         cmd_extra="apt-get clean"
     fi
 elif [ $en = altlinux8 ] || [ $en = altlinux9 ] || [ $en = altlinux10 ]; then
