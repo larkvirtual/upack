@@ -58,6 +58,15 @@ altlinux10_dup() {
     /usr/sbin/remove-old-kernels && apt-get clean
 }
 
+altlinux11_up() {
+    apt-get update && apt-get dist-upgrade && apt-get clean
+}
+
+altlinux11_dup() {
+    apt-get update && apt-get dist-upgrade && /usr/sbin/update-kernel && \
+    /usr/sbin/remove-old-kernels && apt-get clean
+}
+
 fedora_dup() {
     dnf update $FORCEY && dnf autoremove $FORCEY
 }
@@ -113,6 +122,8 @@ up() {
         altlinux9_up
     elif [ $1 = altlinux10 ]; then
         altlinux10_up
+    elif [ $1 = altlinux11 ]; then
+        altlinux11_up
     elif [ $1 = freebsd ]; then
         freebsd_up
     elif [ $1 = suse ]; then
@@ -131,6 +142,7 @@ dup() {
     elif [ $1 = altlinux8 ]; then altlinux8_dup
     elif [ $1 = altlinux9 ]; then altlinux9_dup
     elif [ $1 = altlinux10 ]; then altlinux10_dup
+    elif [ $1 = altlinux11 ]; then altlinux11_dup
     elif [ $1 = freebsd ]; then freebsd_dup
     elif [ $1 = suse ]; then suse_dup
     elif [ $1 = solaris ]; then solaris_dup
@@ -172,6 +184,8 @@ detect_env() {
             echo altlinux9; return
         elif [[ $nicerId = *10* ]]; then
             echo altlinux10; return
+        elif [[ $nicerId = *11* ]]; then
+            echo altlinux11; return
         fi
     fi
 
@@ -244,6 +258,14 @@ elif [ $en = altlinux9 ]; then
     map[gnat]=gcc8-gnat
     map[wireshark]=wireshark-qt5
 elif [ $en = altlinux10 ]; then
+    map[sshfs]=fuse-sshfs
+    map[qtcreator]=qt-creator
+    map[7z]=p7zip
+    map[7za]=p7zip-standalone
+    map[g++]=gcc13-c++
+    map[gnat]=gcc13-gnat
+    map[wireshark]=wireshark-qt5
+elif [ $en = altlinux11 ]; then
     map[sshfs]=fuse-sshfs
     map[qtcreator]=qt-creator
     map[7z]=p7zip
