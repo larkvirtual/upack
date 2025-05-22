@@ -27,7 +27,7 @@
 
 # Update upack
   - `cd upack`
-  - `make update`
+  - `sudo make update`
 
 # Use upack
   - `sudo upack dup` # System-wide update (userland, kernel)

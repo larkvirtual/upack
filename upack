@@ -32,38 +32,38 @@ debian_dup() {
 }
 
 altlinux8_up() {
-    apt-get update && apt-get upgrade && apt-get clean
+    apt-get update && apt-get dist-upgrade $FORCEY && apt-get clean
 }
 
 altlinux8_dup() {
-    apt-get update && apt-get dist-upgrade && /usr/sbin/update-kernel && \
+    apt-get update && apt-get dist-upgrade $FORCEY && /usr/sbin/update-kernel && \
     /usr/sbin/remove-old-kernels && apt-get clean
 }
 
 altlinux9_up() {
-    apt-get update && apt-get dist-upgrade && apt-get clean
+    apt-get update && apt-get dist-upgrade $FORCEY && apt-get clean
 }
 
 altlinux9_dup() {
-    apt-get update && apt-get dist-upgrade && /usr/sbin/update-kernel && \
+    apt-get update && apt-get dist-upgrade $FORCEY && /usr/sbin/update-kernel && \
     /usr/sbin/remove-old-kernels && apt-get clean
 }
 
 altlinux10_up() {
-    apt-get update && apt-get dist-upgrade && apt-get clean
+    apt-get update && apt-get dist-upgrade $FORCEY && apt-get clean
 }
 
 altlinux10_dup() {
-    apt-get update && apt-get dist-upgrade && /usr/sbin/update-kernel && \
+    apt-get update && apt-get dist-upgrade $FORCEY && /usr/sbin/update-kernel && \
     /usr/sbin/remove-old-kernels && apt-get clean
 }
 
 altlinux11_up() {
-    apt-get update && apt-get dist-upgrade && apt-get clean
+    apt-get update && apt-get dist-upgrade $FORCEY && apt-get clean
 }
 
 altlinux11_dup() {
-    apt-get update && apt-get dist-upgrade && /usr/sbin/update-kernel && \
+    apt-get update && apt-get dist-upgrade $FORCEY && /usr/sbin/update-kernel && \
     /usr/sbin/remove-old-kernels && apt-get clean
 }
 
@@ -208,7 +208,7 @@ list_supported() {
     echo "CentOS 7+"
     echo "Dyson (at least Dufay)"
     echo "Manjaro 17.0+"
-    echo "ALT Linux 8, 9, 10"
+    echo "ALT Linux 8+"
     echo "FreeBSD 11+"
     echo "openSUSE 42.2+ and Tumbleweed"
     echo "Solaris 11.3+"
@@ -262,16 +262,16 @@ elif [ $en = altlinux10 ]; then
     map[qtcreator]=qt-creator
     map[7z]=p7zip
     map[7za]=p7zip-standalone
-    map[g++]=gcc13-c++
-    map[gnat]=gcc13-gnat
+    map[g++]=gcc10-c++
+    map[gnat]=gcc10-gnat
     map[wireshark]=wireshark-qt5
 elif [ $en = altlinux11 ]; then
     map[sshfs]=fuse-sshfs
     map[qtcreator]=qt-creator
     map[7z]=p7zip
     map[7za]=p7zip-standalone
-    map[g++]=gcc10-c++
-    map[gnat]=gcc10-gnat
+    map[g++]=gcc13-c++
+    map[gnat]=gcc13-gnat
     map[wireshark]=wireshark-qt5
 elif [ $en = pacman ]; then
     map[7z]=p7zip
@@ -334,7 +334,7 @@ else
 fi
 
 cmd_extra=""
-if [ $en = debian ]; then
+if [ $en = debian ] || [ $en = altlinux8 ] || [ $en = altlinux9 ] || [ $en = altlinux10 ] || [ $en = altlinux11 ]; then
     if [ $1 = remove ]; then
         cmd="apt-get $1"
         cmd_extra="apt-get autoremove"
@@ -342,8 +342,6 @@ if [ $en = debian ]; then
         cmd="apt-get install"
         cmd_extra="apt-get clean"
     fi
-elif [ $en = altlinux8 ] || [ $en = altlinux9 ] || [ $en = altlinux10 ]; then
-    cmd="apt-get $1"
 elif [ $en = fedora ]; then
     cmd="dnf $1"
     if [ $1 = remove ]; then
@@ -412,6 +410,7 @@ elif [ $en = solaris ]; then
     fi
 else
     echo "Internal error: add check for a new environment"
+    echo "variable en is '$en'"
     exit 1
 fi
 

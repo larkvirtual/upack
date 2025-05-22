@@ -9,7 +9,7 @@ awk 1 ORS='' upack.version > /usr/bin/upack.version; \
 fi
 	@git log --pretty=format:'%h' -n 1 >> /usr/bin/upack.version
 	@rm -f upack.version
-	-@grep -q "altlinux" /etc/os-release 2> /dev/null; \
+	-@grep -q "altlinux" /etc/os-release 2> /dev/null && grep -qE 'VERSION_ID=p?8' /etc/os-release; \
 if [ $$? = 0 ]; then \
 echo "Installing required package bash4 (as ALT Linux 8 /bin/bash is version 3)"; \
 apt-get install bash4 -y && \
@@ -32,4 +32,4 @@ else rm -f /usr/bin/upack /usr/bin/upack.version; fi
 # if os is freebsd, then bash package should be removed
 
 update:
-	sudo make uninstall && git pull && sudo make install
+	make uninstall && git pull && make install
