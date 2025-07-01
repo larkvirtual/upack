@@ -8,6 +8,7 @@
   - Dyson
   - Manjaro
   - ALT Linux
+  - Rosa Linux
   - FreeBSD
   - openSUSE
   - Solaris
