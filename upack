@@ -169,7 +169,7 @@ detect_env() {
     grep -q "ID=\"centos\"" /etc/os-release
     if [ $? = 0 ]; then echo centos; return; fi
 
-    grep -qE "[Ff]edora|rosa" /etc/os-release
+    grep -q "[Ff]edora" /etc/os-release
     if [ $? = 0 ]; then echo fedora; return; fi
 
     grep -q "manjaro" /etc/os-release
@@ -239,7 +239,8 @@ elif [ $en = redhat7 ] || [ $en = redhat8 ] || [ $en = fedora ] || [ $en = cento
     map[qmake-qt4]=qt-devel
     map[gnat]=gcc-gnat
     map[lm-sensors]=lm_sensors
-    map[wireshark]=wireshark-gtk
+    map[libssl-dev]=openssl-devel
+    map[webp]=libwebp-tools
 elif [ $en = altlinux8 ]; then
     map[sshfs]=fuse-sshfs
     map[qtcreator]=qt-creator
