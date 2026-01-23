@@ -4,7 +4,7 @@
   - Mint
   - Fedora
   - RHEL
-  - CentOS
+  - CentOS Stream
   - Dyson
   - Manjaro
   - ALT Linux
