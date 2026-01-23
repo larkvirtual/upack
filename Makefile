@@ -1,5 +1,7 @@
-install:
-	@cp upack /usr/bin
+info:
+	@echo "Targets: info, install, update, uninstall"
+
+upack.version-hash:
 	@git branch | grep '*' | awk '{ print $$2 }' > upack.version
 	@echo / >> upack.version;
 	@if [ `uname` = SunOS ] && [ ! -f /etc/debian_version ]; then \
@@ -7,8 +9,15 @@ gawk 1 ORS='' upack.version > /usr/bin/upack.version; \
 else \
 awk 1 ORS='' upack.version > /usr/bin/upack.version; \
 fi
-	@git log --pretty=format:'%h' -n 1 >> /usr/bin/upack.version
+	@git log --pretty=format:'%h' -n 1  >> /usr/bin/upack.version
 	@rm -f upack.version
+
+upack.version-tag:
+	@echo "0"                            > /usr/bin/upack.version
+
+install: upack.version-hash
+#install: upack.version-tag
+	@cp upack /usr/bin
 	-@grep -q "altlinux" /etc/os-release 2> /dev/null && grep -qE 'VERSION_ID=p?8' /etc/os-release; \
 if [ $$? = 0 ]; then \
 echo "Installing required package bash4 (as ALT Linux 8 /bin/bash is version 3)"; \

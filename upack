@@ -327,11 +327,11 @@ if [ $# -ge 1 ]; then
     if [ $1 != install ] && [ $1 != in ] && [ $1 != remove ] && \
        [ $1 != up ] && [ $1 != dup ]; then
         usage;
-        exit 0;
+        exit 0
     fi
 else
     usage;
-    exit 0;
+    exit 0
 fi
 
 cmd_extra=""
@@ -452,7 +452,7 @@ fi
 if [ $DRYRUN = 1 ]; then
     echo "$finalCmd"
     if [ ! -z "$cmd_extra" ]; then echo "$cmd_extra"; fi
-    exit 0;
+    exit 0
 fi
 
 $finalCmd
