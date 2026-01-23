@@ -13,7 +13,7 @@ fi
 	@rm -f upack.version
 
 upack.version-tag:
-	@echo "0"                            > /usr/bin/upack.version
+	@echo "1.00"                         > /usr/bin/upack.version
 
 install: upack.version-hash
 #install: upack.version-tag
