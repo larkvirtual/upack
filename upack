@@ -9,7 +9,7 @@ UNPROCPKGS=""       #  string variable
 PROCESSEDPKGS=""    #  string variable
 
 usage() {
-    echo "Usage: install|in|remove [-y | --dry-run] command1 ..."
+    echo "Usage: install|in|remove|uninstall [-y | --dry-run] command1 ..."
     echo "Usage: up|dup      # update / full system (including kernel) update"
     echo "Usage: up|dup [-y] # for Debian/Ubuntu, openSUSE, RHEL/CentOS/Fedora"
     echo "Usage: --list-commands"
@@ -324,7 +324,7 @@ elif [ $# = 2 ] && [ $1 = dup ] && [ $2 = "-y" ]; then
 fi
 
 if [ $# -ge 1 ]; then
-    if [ $1 != install ] && [ $1 != in ] && [ $1 != remove ] && \
+    if [ $1 != install ] && [ $1 != in ] && [ $1 != remove ] && [ $1 != uninstall ] && \
        [ $1 != up ] && [ $1 != dup ]; then
         usage;
         exit 0
@@ -336,55 +336,41 @@ fi
 
 cmd_extra=""
 if [ $en = debian ] || [ $en = altlinux8 ] || [ $en = altlinux9 ] || [ $en = altlinux10 ] || [ $en = altlinux11 ]; then
-    if [ $1 = remove ]; then
-        cmd="apt-get $1"
+    if [ $1 = remove ] || [ $1 = uninstall ] ; then
+        cmd="apt-get remove"
         cmd_extra="apt-get autoremove"
     elif [ $1 = install ] || [ $1 = in ]; then
         cmd="apt-get install"
         cmd_extra="apt-get clean"
     fi
 elif [ $en = fedora ]; then
-    cmd="dnf $1"
-    if [ $1 = remove ]; then
+    if [ $1 = remove ] || [ $1 = uninstall ] ; then
+        cmd="dnf remove"
         cmd_extra="dnf autoremove"
+    elif [ $1 = install ] || [ $1 = in ]; then
+        cmd="dnf install"
     fi
-elif [ $en = centos ]; then
-    cmd="yum $1"
-    if [ $1 = remove ]; then
-        cmd_extra="yum autoremove"
-    fi
-elif [ $en = redhat7 ] || [ $en = redhat8 ]; then
-    cmd="yum $1"
-    if [ $1 = remove ]; then
+elif [ $en = centos ] || [ $en = redhat7 ] || [ $en = redhat8 ]; then
+    if [ $1 = remove ] || [ $1 = uninstall ] ; then
+        cmd="yum remove"
         cmd_extra="yum autoremove"
     elif [ $1 = install ] || [ $1 = in ]; then
-        # External repository adding depending on environment version special case
-        for i in `seq 2 $#`; do
-            if [ "${!i}" = ansible ]; then
-                if [ $en = redhat7 ]; then
-                    sudo subscription-manager repos --enable rhel-7-server-ansible-2.9-rpms
-                elif [ $en = redhat8 ]; then
-                    sudo subscription-manager repos --enable ansible-2.9-for-rhel-8-x86_64-rpms
-                else
-                    echo "Unexpected environment version. Please update 'upack' version!"
-                    exit 1
-                fi
-            fi
-        done
+        cmd="yum install"
     fi
 elif [ $en = pacman ]; then
     if [ $1 = install ] || [ $1 = in ]; then
         cmd="pacman -S"
-    elif [ $1 = remove ]; then
+    elif [ $1 = remove ] || [ $1 = uninstall ]; then
         cmd="pacman -Rs"
     else
-        echo "Internal error"
+        echo "Unexpected argument: $1"
+        usage;
         exit 1
     fi
 elif [ $en = freebsd ]; then
     if [ $1 = install ] || [ $1 = in ]; then
         cmd="pkg install"
-    elif [ $1 = remove ]; then
+    elif [ $1 = remove ] || [ $1 = uninstall ]; then
         cmd="pkg delete"
         cmd_extra="pkg autoremove"
     else
@@ -394,8 +380,8 @@ elif [ $en = freebsd ]; then
 elif [ $en = suse ]; then
     if [ $1 = install ] || [ $1 = in ]; then
         cmd="zypper install"
-    elif [ $1 = remove ]; then
-        cmd="zypper $1 -u"
+    elif [ $1 = remove ] || [ $1 = uninstall ]; then
+        cmd="zypper remove -u"
     else
         echo "Internal error"
         exit 1
@@ -403,7 +389,7 @@ elif [ $en = suse ]; then
 elif [ $en = solaris ]; then
     if [ $1 = install ] || [ $1 = in ]; then
         cmd="pkg install"
-    elif [ $1 = remove ]; then
+    elif [ $1 = remove ] || [ $1 = uninstall ]; then
         cmd="pkg uninstall"
     else
         echo "Internal error"
