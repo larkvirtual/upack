@@ -15,8 +15,8 @@ fi
 upack.version-tag:
 	@echo "1.01"                         > /usr/bin/upack.version
 
-install: upack.version-hash
-#install: upack.version-tag
+#install: upack.version-hash
+install: upack.version-tag
 	@cp upack /usr/bin
 	-@grep -q "altlinux" /etc/os-release 2> /dev/null && grep -qE 'VERSION_ID=p?8' /etc/os-release; \
 if [ $$? = 0 ]; then \
