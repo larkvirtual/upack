@@ -36,7 +36,7 @@ altlinux8_up() {
 }
 
 altlinux8_dup() {
-    apt-get update && apt-get dist-upgrade $FORCEY && /usr/sbin/update-kernel && \
+    apt-get update && apt-get dist-upgrade $FORCEY && /usr/sbin/update-kernel $FORCEY && \
     /usr/sbin/remove-old-kernels && apt-get clean
 }
 
@@ -45,7 +45,7 @@ altlinux9_up() {
 }
 
 altlinux9_dup() {
-    apt-get update && apt-get dist-upgrade $FORCEY && /usr/sbin/update-kernel && \
+    apt-get update && apt-get dist-upgrade $FORCEY && /usr/sbin/update-kernel $FORCEY && \
     /usr/sbin/remove-old-kernels && apt-get clean
 }
 
@@ -54,7 +54,7 @@ altlinux10_up() {
 }
 
 altlinux10_dup() {
-    apt-get update && apt-get dist-upgrade $FORCEY && /usr/sbin/update-kernel && \
+    apt-get update && apt-get dist-upgrade $FORCEY && /usr/sbin/update-kernel $FORCEY && \
     /usr/sbin/remove-old-kernels && apt-get clean
 }
 
@@ -63,7 +63,7 @@ altlinux11_up() {
 }
 
 altlinux11_dup() {
-    apt-get update && apt-get dist-upgrade $FORCEY && /usr/sbin/update-kernel && \
+    apt-get update && apt-get dist-upgrade $FORCEY && /usr/sbin/update-kernel $FORCEY && \
     /usr/sbin/remove-old-kernels && apt-get clean
 }
 
