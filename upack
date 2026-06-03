@@ -169,7 +169,7 @@ detect_env() {
     grep -q "ID=\"centos\"" /etc/os-release
     if [ $? = 0 ]; then echo centos; return; fi
 
-    grep -q "[Ff]edora" /etc/os-release
+    grep -qE "[Ff]edora|ROSA" /etc/os-release
     if [ $? = 0 ]; then echo fedora; return; fi
 
     grep -q "manjaro" /etc/os-release
